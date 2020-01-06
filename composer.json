@@ -1,5 +1,5 @@
 {
-    "name": "laravel-admin-extensions/multi-language",
+    "name": "deepcode-tech/laravel-admin-multi-language",
     "description": "适用于laravel-admin的多语言支持扩展",
     "type": "library",
     "keywords": ["laravel-admin", "extension"],
