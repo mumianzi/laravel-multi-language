@@ -4,7 +4,7 @@ laravel-admin Multi Language
 ## Install
 
 ```
-composer require deepcode-tech/multi-language
+composer require deepcode-tech/laravel-admin-multi-language
 ```
 
 ## Config
