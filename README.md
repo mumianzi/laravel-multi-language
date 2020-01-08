@@ -13,6 +13,7 @@ php artisan vendor:publish --provider="Deepcode\MultiLanguage\MultiLanguageServi
 ```
 
 ## 配置
+需要调用中间件 `lang:xxx`,`xxx`对应该`config/lang.php`中每类配置
 
 In `config/lang.php`
 
