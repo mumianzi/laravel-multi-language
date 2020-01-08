@@ -7,11 +7,11 @@
             <!-- inner menu: contains the actual data -->
             <ul class="menu">
 
-                @foreach($languages as $key => $language)
+                @foreach($locale['languages'] as $key => $language)
                     <li><!-- start message -->
                         <a class="language" href="#" data-id="{{$key}}">
                             {{$language}}
-                            @if($key == $current)
+                            @if($key == $locale['current'])
                                 <i class="fa fa-check pull-right"></i>
                             @endif
                         </a>
@@ -26,7 +26,7 @@
 
     $(".language").click(function () {
         let id = $(this).data('id');
-        $.post(`/admin/locale`,{locale: id}, function () {
+        $.post(`{{$locale['path']}}`,{locale: id,type:`{{$locale['type']}}`}, function () {
             location.reload();
         })
     })

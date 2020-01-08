@@ -1,39 +1,52 @@
 <?php
 
-namespace KevinSoft\MultiLanguage;
+namespace Deepcode\MultiLanguage;
 
-use Encore\Admin\Facades\Admin;
+use Deepcode\MultiLanguage\Http\Controllers\MultiLanguageController;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
-use KevinSoft\MultiLanguage\Widgets\LanguageMenu;
+use Deepcode\MultiLanguage\Widgets\LanguageMenu;
+use Deepcode\MultiLanguage\Middlewares\MultiLanguageMiddleware;
 
 class MultiLanguageServiceProvider extends ServiceProvider
 {
+
+    public function register()
+    {
+        app('router')->aliasMiddleware('lang', MultiLanguageMiddleware::class);
+    }
+
     /**
      * {@inheritdoc}
      */
-    public function boot(MultiLanguage $extension)
+    public function boot()
     {
-        if (! MultiLanguage::boot()) {
-            return ;
+        if ($this->app->runningInConsole()) {
+            $this->publishes([__DIR__.'/../config' => config_path()], 'multi-language');
         }
 
-        if ($views = $extension->views()) {
-            $this->loadViewsFrom($views, 'multi-language');
+        if (config('lang.enable') !== TRUE) {
+            return;
         }
+        $this->loadRoutes();
+        
+        $this->loadViewsFrom(MultiLanguage::$views, 'multi-language');
 
-        if ($this->app->runningInConsole() && $assets = $extension->assets()) {
-            $this->publishes(
-                [$assets => public_path('vendor/kevinsoft/multi-language')],
-                'multi-language'
-            );
+
+    }
+
+    public function loadRoutes()
+    {
+        if ($this->app->routesAreCached()) {
+            return;
         }
-
-        $this->app->booted(function () {
-            MultiLanguage::routes(__DIR__.'/../routes/web.php');
-        });
-
-        # $this->app->make('Illuminate\Contracts\Http\Kernel')->prependMiddleware(Middlewares\MultiLanguageMiddleware::class);
-        $this->app['router']->pushMiddlewareToGroup('web', Middlewares\MultiLanguageMiddleware::class);
-        Admin::navbar()->add(new LanguageMenu());
+        foreach (config('lang', []) as $item) {
+            if (is_array($item)) {
+                $path = trim(Arr::get($item, 'path'), '/');
+                $path = $path ? "/{$path}/locale" : "/locale";
+                Route::post($path, MultiLanguageController::class.'@locale');
+            }
+        }
     }
 }

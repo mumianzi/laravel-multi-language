@@ -1,14 +1,13 @@
 <?php
 
-namespace KevinSoft\MultiLanguage;
+namespace Deepcode\MultiLanguage;
 
-use Encore\Admin\Extension;
-
-class MultiLanguage extends Extension
+class MultiLanguage
 {
+
     public $name = 'multi-language';
 
-    public $views = __DIR__.'/../resources/views';
+    public static $views = __DIR__.'/../resources/views';
 
-    public $assets = __DIR__.'/../resources/assets';
+
 }

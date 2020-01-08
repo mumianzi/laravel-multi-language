@@ -1,13 +1,13 @@
 <?php
 
 
-namespace KevinSoft\MultiLanguage\Widgets;
+namespace Deepcode\MultiLanguage\Widgets;
 
 
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Log;
-use KevinSoft\MultiLanguage\MultiLanguage;
+// use Deepcode\MultiLanguage\MultiLanguage;
 
 class LanguageMenu implements Renderable
 {
@@ -19,11 +19,6 @@ class LanguageMenu implements Renderable
      */
     public function render()
     {
-        $current = MultiLanguage::config('default');
-        if(Cookie::has('locale')) {
-            $current = Cookie::get('locale');
-        }
-        $languages = MultiLanguage::config("languages");
-        return view("multi-language::language-menu", compact('languages', 'current'))->render();
+        return view("multi-language::language-menu")->render();
     }
 }

@@ -1,23 +1,28 @@
-laravel-admin Multi Language
+laravel Multi Language
 ======
 
-## Install
+## 安装
 
 ```
-composer require deepcode-tech/laravel-admin-multi-language
+composer require deepcode-tech/laravel-multi-language
+```
+## 发布配置文件
+```
+php artisan vendor:publish --provider="Deepcode\MultiLanguage\MultiLanguageServiceProvider"
+
 ```
 
-## Config
+## 配置
 
-
-First, add extension config
-
-In `config/admin.php`
+In `config/lang.php`
 
 ```
-    'extensions' => [
-        'multi-language' => [
+    [
+        'enable'=>true,
+        'defautl' => [
             'enable' => true,
+             //cookie path
+            'path'  => '/',
             // the key should be same as var locale in config/app.php
             // the value is used to show
             'languages' => [
@@ -29,6 +34,8 @@ In `config/admin.php`
         ],
     ],
 ```
+
+### 在laravel-admin中的配置
 
 Then, add except route to auth
 
@@ -47,6 +54,15 @@ In `config/admin.php`, add `locale` to `auth.excepts`
     ],
 
 ```
+
+In `laravel-admin/bootstrap.php`, 添加语言切换菜单:
+```
+Encore\Admin\Facades\Admin::navbar()->add(new LanguageMenu());
+```
+登陆界面添加语言选择下拉
+
+复制当前包中 `views/login.blade.php` 到 `resources/views/vendor/admin/` 中
+
 
 ## ScreenShots
 
