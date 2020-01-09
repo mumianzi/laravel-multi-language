@@ -133,8 +133,10 @@ $(function() {
     $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('input[name="_token"]').attr('value')}});
 
     $("#locale").change(function() {
-        let locale = $('#locale option:selected').val();
-        $.post(`{{$locale['path']}}`, {locale: locale, provider: '{{$locale['provider']}}'},
+        $(":input").prop('disabled', true);
+        let selectedLang = $('#locale option:selected');
+        $.admin.toastr.success(`{{__('messages.switch_language_to')}}`+selectedLang.text(), '', {positionClass:"toast-top-center"});
+        $.post(`{{$locale['path']}}`, {locale: selectedLang.val(), provider: '{{$locale['provider']}}'},
             function() {
                 location.reload();
             });

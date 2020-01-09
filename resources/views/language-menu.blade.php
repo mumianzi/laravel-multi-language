@@ -9,7 +9,7 @@
 
                 @foreach($locale['languages'] as $key => $language)
                     <li><!-- start message -->
-                        <a class="language" href="#" data-id="{{$key}}">
+                        <a class="language" href="#" data-id="{{$key}}" data-label="{{$language}}">
                             {{$language}}
                             @if($key == $locale['current'])
                                 <i class="fa fa-check pull-right"></i>
@@ -25,6 +25,7 @@
     $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
 
     $(".language").click(function () {
+        $.admin.toastr.success(`{{__('messages.switch_language_to')}}`+$(this).data('label'), '', {positionClass:"toast-top-center"});
         let id = $(this).data('id');
         $.post(`{{$locale['path']}}`,{locale: id,provider:`{{$locale['provider']}}`}, function () {
             location.reload();
