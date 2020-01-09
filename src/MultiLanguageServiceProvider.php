@@ -26,14 +26,12 @@ class MultiLanguageServiceProvider extends ServiceProvider
             $this->publishes([__DIR__.'/../config' => config_path()], 'multi-language');
         }
 
-        if (config('lang.enable') !== TRUE) {
+        if ( ! MultiLanguage::enabled()) {
             return;
         }
         $this->loadRoutes();
-        
+
         $this->loadViewsFrom(MultiLanguage::$views, 'multi-language');
-
-
     }
 
     public function loadRoutes()
@@ -41,12 +39,22 @@ class MultiLanguageServiceProvider extends ServiceProvider
         if ($this->app->routesAreCached()) {
             return;
         }
-        foreach (config('lang', []) as $item) {
-            if (is_array($item)) {
-                $path = trim(Arr::get($item, 'path'), '/');
-                $path = $path ? "/{$path}/locale" : "/locale";
-                Route::post($path, MultiLanguageController::class.'@locale');
+        if ($providers = config('lang.providers', [])) {
+            $baseMiddleware = config('lang.middleware', []);
+            $baseMiddleware = $this->transMiddleware($baseMiddleware);
+            foreach ($providers as $item) {
+                if (is_array($item)) {
+                    $path = trim(Arr::get($item, 'path'), '/');
+                    $path = $path ? "/{$path}/locale" : "/locale";
+                    $middleware = array_merge($baseMiddleware, $this->transMiddleware(Arr::get($item, 'middleware')));
+                    Route::post($path, MultiLanguageController::class.'@locale')->middleware($middleware);
+                }
             }
         }
+    }
+
+    private function transMiddleware($value)
+    {
+        return is_string($value) ? explode(',', $value) : (is_array($value) ? $value : []);
     }
 }

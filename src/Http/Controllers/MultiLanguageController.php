@@ -13,14 +13,14 @@ class MultiLanguageController extends Controller
 
     public function locale()
     {
-        $type = Request::get('type');
+        $provider = Request::get('provider');
         $locale = Request::get('locale');
-        $langConfig = config("lang.{$type}", []);
-        if (Arr::get($langConfig, 'enable') !== FALSE
+        $langConfig = config("lang.providers.{$provider}", []);
+        if (MultiLanguage::enabled($provider)
             && array_key_exists($locale, Arr::get($langConfig, 'languages', []))) {
             $path = '/'.trim(Arr::get($langConfig, 'path'), '/');
 
-            $cookie = Cookie::forever('language', $locale, $path);
+            $cookie = Cookie::forever('language', $locale, $path, Arr::get($langConfig, 'domain'));
 
             return response('ok')->cookie($cookie);
         }

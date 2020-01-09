@@ -19,21 +19,23 @@ In `config/lang.php`
 
 ```
     [
-        'enable'=>true,
-        'defautl' => [
-            'enable' => true,
-             //cookie path
-            'path'  => '/',
-            // the key should be same as var locale in config/app.php
-            // the value is used to show
-            'languages' => [
-                'en' => 'English',
-                'zh-CN' => '简体中文',
+        'enable' => TRUE,
+        'middleware'=> 'web',
+        'providers' => [
+            'default' => [
+                'enable' => TRUE,
+                'languages' => [
+                    'en' => 'English',
+                    'zh-CN' => '简体中文',
+                ],
+                // default locale
+                'default' => 'en',
+                'is_api' => FALSE,
+                'path' => '/',
+                'domain' => NULL,
             ],
-            // default locale
-            'default' => 'zh-CN',
         ],
-    ],
+    ]
 ```
 
 ### 在laravel-admin中的配置

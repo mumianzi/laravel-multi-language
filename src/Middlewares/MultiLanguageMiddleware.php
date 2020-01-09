@@ -3,6 +3,7 @@
 namespace Deepcode\MultiLanguage\Middlewares;
 
 use Closure;
+use Deepcode\MultiLanguage\MultiLanguage;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Str;
 
@@ -20,14 +21,14 @@ class MultiLanguageMiddleware
      */
     public function handle($request, Closure $next, ...$args)
     {
-        $platform = ($args[0] ?? NULL) ?: 'default';
-        if ($this->setLanguage($request, $platform) !== NULL) {
+        $provider = ($args[0] ?? NULL) ?: 'default';
+        if ($this->setLanguage($request, $provider) !== NULL) {
             view()->share([
                 'locale' => [
-                    'languages' => config("lang.{$platform}.enable") ? config("lang.{$platform}.languages") : NULL,
+                    'languages' => config("lang.providers.{$provider}.languages"),
                     'current' => app()->getLocale(),
-                    'type' => $platform,
-                    'path' => '/'.trim(config("lang.{$platform}.path"), '/').'/locale',
+                    'provider' => $provider,
+                    'path' => '/'.trim(config("lang.providers.{$provider}.path"), '/').'/locale',
                 ],
             ]);
         }
@@ -35,26 +36,26 @@ class MultiLanguageMiddleware
         return $next($request);
     }
 
-    function setLanguage($request, $platform)
+    function setLanguage($request, $provider)
     {
-        if (config("lang.{$platform}.enable") !== TRUE) {
+        if ( ! MultiLanguage::enabled($provider)) {
             return NULL;
         }
 
-        $supportLangs = config("lang.{$platform}.languages");
-        // config([
-        //     'lang.languages' => $supportLangs,
-        //     'lang.type' => $platform,
-        // ]);
+        $supportLangs = config("lang.providers.{$provider}.languages", []);
+
         $lang = NULL;
 
-        if ( ! Str::is(['api', 'pcapi'], $platform)) {
+        if ( ! MultiLanguage::isApi($provider)) {
             $lang = Cookie::has('language') ? Cookie::get('language') : $lang;
         }
 
         if ( ! $lang) {
             $lang = $request->header('language', $request->getPreferredLanguage(array_keys($supportLangs)));
-            $lang = $lang ? fix_language_code($lang) : config("lang.{$platform}.default", config('app.locale'));
+            $lang = $lang ? $lang : config("lang.providers.{$provider}.default", config('app.locale'));
+            if ($lang && function_exists('fix_language_code')) {
+                $lang = fix_language_code($lang);
+            }
         }
 
         if ($lang && key_exists($lang, $supportLangs) && $lang !== app()->getLocale()) {

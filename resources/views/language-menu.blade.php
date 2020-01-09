@@ -26,7 +26,7 @@
 
     $(".language").click(function () {
         let id = $(this).data('id');
-        $.post(`{{$locale['path']}}`,{locale: id,type:`{{$locale['type']}}`}, function () {
+        $.post(`{{$locale['path']}}`,{locale: id,provider:`{{$locale['provider']}}`}, function () {
             location.reload();
         })
     })

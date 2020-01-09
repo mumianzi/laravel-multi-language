@@ -134,7 +134,7 @@ $(function() {
 
     $("#locale").change(function() {
         let locale = $('#locale option:selected').val();
-        $.post(`{{$locale['path']}}`, {locale: locale, type: '{{$locale['type']}}'},
+        $.post(`{{$locale['path']}}`, {locale: locale, provider: '{{$locale['provider']}}'},
             function() {
                 location.reload();
             });
