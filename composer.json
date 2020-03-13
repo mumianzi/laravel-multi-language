@@ -2,7 +2,10 @@
     "name": "deepcode-tech/laravel-multi-language",
     "description": "适用于laravel的多语言支持扩展",
     "type": "library",
-    "keywords": ["laravel", "extension"],
+    "keywords": [
+        "laravel",
+        "extension"
+    ],
     "homepage": "https://github.com/deepcode-tech/laravel-multi-language",
     "license": "MIT",
     "version": "0.0.3",
@@ -14,7 +17,7 @@
     ],
     "require": {
         "php": ">=7.2.0",
-        "laravel/framework": "~6.0"
+        "laravel/framework": ">6.0"
     },
     "require-dev": {
         "phpunit/phpunit": "~6.0"
